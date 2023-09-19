@@ -6,6 +6,7 @@ import { Input } from './Input'
 export const AddTodo = () => {
   const [input, setInput] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const { addTodo } = useTodo()
 
   useEffect(() => {
     if (inputRef.current) {
@@ -16,14 +17,19 @@ export const AddTodo = () => {
   const handleSubmission = (e: React.FormEvent) => {
     e.preventDefault()
 
-    console.log('The form has been submitted')
+    if (input.trim() !== '') {
+      addTodo(input)
+      setInput('')
+      toast.success('Todo added successfully')
+    } else {
+      toast.error('Todo field cannot be empty')
+    }
   }
 
   return (
     <form onSubmit={handleSubmission}>
       <div className="flex items-center w-full max-w-lg gap-2 m-auto">
-        <input
-          ref={inputRef}
+        <Input
           value={input}
           onChange={e => setInput(e.target.value)}
           type="text"
